@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: chat-dep
+
+spec:
+  replicas: 5
+
+  selector:
+    matchLabels:
+      app: chat
+
+  template:
+    metadata:
+      labels:
+        app: chat
+
+    spec:
+      containers:
+      - name: chat
+        image: chat:latest
+        imagePullPolicy: Never
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+
+        env:
+        - name: APP_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: chat-config
+              key: APP_NAME
+        - name: ENV
+          valueFrom:
+            configMapKeyRef:
+              name: chat-config
+              key: ENV
